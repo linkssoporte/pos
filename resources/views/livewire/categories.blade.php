@@ -10,8 +10,7 @@
 
                     <div class="form-group">
                         <label>Nombre</label>
-                        <input wire:model.defer="category.name" id='inputFocus' type="text"
-                            class="form-control form-control-lg" placeholder="Nombre de la Categoria">
+                        <input wire:model.defer="category.name" id='inputFocus' type="text" class="form-control form-control-lg" placeholder="Nombre de la Categoria">
                         @error('category.name')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -21,8 +20,7 @@
                     <div class="input-group">
                         <label class="custom-file-label">Imagen</label>
                         <div class="custom-file">
-                            <input wire:model="upload" type="file" class="custom-file-input"
-                                accept="image/x-png, image/jpeg, image/jpg">
+                            <input wire:model="upload" type="file" class="custom-file-input" accept="image/x-png, image/jpeg, image/jpg">
 
                         </div>
                         @error('category.image')
@@ -49,8 +47,7 @@
 
 
                 <div class="form-footer">
-                    <button class="btn btn-sm btn-dark float-left hidden {{ $editing ? 'd-block' : 'd-none' }}"
-                        wire:click="cancelEdit">
+                    <button class="btn btn-sm btn-dark float-left hidden {{ $editing ? 'd-block' : 'd-none' }}" wire:click="cancelEdit">
                         Cancelar
                     </button>
 
@@ -105,17 +102,37 @@
                                         <img class="img-fluid rounded" src="{{ $item->picture }}" alt="pic" width="50">
                                     </td>
 
-                                    <td>{{$item->name}}</td>
+                                    <td>
+
+                                        <div>{{$item->name}}</div>
+
+                                        <!-- esta line de codigo es para  woocommerce-->
+                                        <!-- sincronizar categorias en abos lados tanto local como en linea-->
+                                        @if($item->platform_id !=null)
+                                        <small>IDW{{$item->platform_id}}</small>
+                                        @endif
+
+                                    </td>
 
                                     <td>
 
                                         <button class="btn tp-btn btn-xs btn-primary"
-                                            wire:click="Edit({{ $item->id }})"><i class="las la-pen la-2x"></i>
+                                         wire:click="Edit({{ $item->id }})"><i class="las la-pen la-2x"></i>
                                         </button>
-                                        <button class="btn tp-btn btn-xs btn-danger"
-                                            onclick="Confirm('categories',{{$item->id}} )">
+
+                                        @if(!$item->products()->exists())
+                                        <button class="btn tp-btn btn-xs btn-danger" onclick="Confirm('categories',{{$item->id}} )">
                                             <i class="las la-trash-alt la-2x"></i>
                                         </button>
+                                        @endif
+
+                                        <!-- boton para sincronizar con woocommerce-->
+                                        <!-- boton de sincornizacion de local a en linea-->
+                                        @if($item->platform_id ==null)
+                                        <button class="btn tp-btn btn-xs btn-light" wire:click.prevent="Sync({{$item->id}} )">
+                                            <i class="las la-sync-alt la-2x"></i>
+                                        </button>
+                                        @endif
 
 
 
@@ -155,9 +172,9 @@
     </div>
 
     <script>
-    document.addEventListener('stop-loader', (event) => {
-        SlickLoader.disable()
-    })
+        document.addEventListener('stop-loader', (event) => {
+            SlickLoader.disable()
+        })
     </script>
 
 </div>

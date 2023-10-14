@@ -31,4 +31,9 @@ class Category extends Model
         }
         return 'storage/not-image.jpg';
     }
+
+    //relacion enrtre la tabla de categoria y productos
+    public function products(){
+        return $this->belongsToMany(product::class, 'category_products' );
+    }
 }

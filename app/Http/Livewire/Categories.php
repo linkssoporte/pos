@@ -5,7 +5,9 @@ namespace App\Http\Livewire;
 use App\Models\Image;
 use Livewire\Component;
 use App\Models\Category;
+use App\Traits\CategoryTraint;
 use App\Traits\CategoryTrait;
+use App\Traits\WoocommerceTrait;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 
@@ -16,6 +18,7 @@ class Categories extends Component
 {
     use WithPagination;
     use WithFileUploads;
+    use CategoryTrait;
 
     //propiedades o variables
 
@@ -37,6 +40,7 @@ class Categories extends Component
     {
         $this->category = new Category();
         $this->editing = false;
+        //dd($this->getCategories());
     }
 
     //eventos
@@ -158,6 +162,18 @@ class Categories extends Component
             $this->category->Image()->save($img);
         }
 
+        // WOOCOMERCE creaar una categoria local y se sincroniza con woocommerce  solo es al crear
+
+        if(!$this->editing){
+            $idwc = $this->createCategory($this->category->name);
+            $this->category->platform_id = $idwc;
+            $this->category->save();
+
+        }else {
+            $this->updateCategory($this->category);
+                
+        }
+
         $this->dispatchBrowserEvent('noty', ['msg' => 'OPERACION CON EXITO']);
         $this->dispatchBrowserEvent('stop-loader');
         $this->resetExcept('category');
@@ -175,7 +191,7 @@ class Categories extends Component
         }
         // 2. Elimina la relación de la imagen con la categoría en la base de datos
         $category->image()->delete();
-        // 3. Si la categoría tiene un platform_id definido, llama a la función 'deleteCategory' para realizar una acción relacionada.
+        // 3. Si la categoría tiene un platform_id definido, llama a la función 'deleteCategory' para realizar una acción relacionada woocomerce.
         if ($category->platform_id != null) {
             $this->deleteCategory($category->platform_id);
         }
@@ -189,8 +205,13 @@ class Categories extends Component
         $this->dispatchBrowserEvent('stop-loader');
     }
 
+    //funcion que usa woocommerce para sicronizar de laravel a woocoomerce
     public function Sync(Category $category)
     {
         $this->findOrCreateCategoryByName($category);
     }
+
+    
+
+    
 }
