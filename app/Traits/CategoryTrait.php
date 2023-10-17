@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\Category;
 use Illuminate\Support\Facades\Log;
 
 trait CategoryTrait
@@ -27,7 +28,25 @@ trait CategoryTrait
             $result = $woocommerce->post('products/categories', $data);
             Log::info(json_encode($result));
 
-            return $result->id;
+            // Obtener el ID de la categoría creada en WooCommerce
+        //$woocommerceCategoryId = $result->id;
+
+        // Crear una nueva instancia de la categoría local
+       // $category = new Category();
+        //$category->name = $name;
+
+        // Guardar la nueva categoría local en la base de datos
+       // $category->save();
+
+        // Opcional: Asignar el ID de la categoría local a la propiedad de WooCommerce
+        //$category->platform_id = $woocommerceCategoryId;
+        //$category->save();
+
+        //return $woocommerceCategoryId;
+           return $result->id;
+
+            
+
         } catch (\Throwable $th) {
             throw $th;
         }

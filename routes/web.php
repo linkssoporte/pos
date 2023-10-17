@@ -4,6 +4,7 @@ use App\Http\Livewire\Tester;
 use App\Http\Livewire\Categories;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use App\Http\Livewire\Suppliers;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('categories', Categories::class)->name('categories');
+Route::get('suppliers', Suppliers::class)->name('suppliers');
 Route::get('tester', Tester::class)->name('tester');
 
 require __DIR__.'/auth.php';
