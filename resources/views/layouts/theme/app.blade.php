@@ -127,6 +127,20 @@
     <livewire:scripts/>
     
     @stack('my-scripts')
+
+    <script>
+        livewire.hook('message.processed', (message, component) => {
+            
+            SlickLoader.disable()
+
+            setTimeout(() => {
+                document.getElementById('inputFocus').focus()
+            }, 500 );
+
+
+        })
+
+        </script>
     
 </body>
 </html>
